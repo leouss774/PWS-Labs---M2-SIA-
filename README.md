@@ -101,3 +101,18 @@ Inventory: http://127.0.0.1:8000/docs — Orders: http://127.0.0.1:8001/docs
    service name is a hostname, so `http://inventory:8000` reaches the Inventory
    container. On the laptop, both services ran on the same machine, so `127.0.0.1`
    worked.
+
+## Lab 3: what the assistant gets
+
+| Operation | Tool for the assistant? | Reason |
+|---|---|---|
+| `GET /products` | yes | read only: browsing the catalogue changes nothing |
+| `GET /products/{id}` | yes | read only: needed to check a price and the stock |
+| `POST /orders` | yes, but | it takes stock and spends money, so a human confirms each order |
+| `POST /products/{id}/reservations` | no | takes stock out without an order: units locked for nothing |
+| `POST /products` | no | managing the catalogue is not the assistant's job |
+| `PUT` / `PATCH /products/{id}` | no | a name, a price or a stock level is a business decision |
+| `DELETE /products/{id}` | never | removes a product, and the API has no way to undo it |
+
+Two rules: the assistant gets the smallest set of tools that does the job, and
+nothing that spends money or takes stock completes on the model's word alone.
